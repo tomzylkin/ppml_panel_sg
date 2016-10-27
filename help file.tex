@@ -1,0 +1,373 @@
+%% LyX 2.1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\RequirePackage{fix-cm}
+\documentclass[12pt]{article}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1.5cm,bmargin=2cm,lmargin=1.25cm,rmargin=1.25cm}
+\setlength{\parskip}{0bp}
+\setlength{\parindent}{0pt}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage[authoryear]{natbib}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\setstretch{1.175}
+\usepackage[unicode=true]
+ {hyperref}
+\usepackage{breakurl}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+\newenvironment{lyxlist}[1]
+{\begin{list}{}
+{\settowidth{\labelwidth}{#1}
+ \setlength{\leftmargin}{\labelwidth}
+ \addtolength{\leftmargin}{\labelsep}
+ \renewcommand{\makelabel}[1]{##1\hfil}}}
+{\end{list}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+
+\usepackage{fancyhdr}
+
+\usepackage{setspace}
+\providecommand{\tabularnewline}{\\}
+\usepackage{pgf}\usepackage{pgfarrows}\usepackage{pgfnodes}\usepackage{pgfautomata}\usepackage{pgfheaps}\usepackage{abstract}\usepackage{longtable}\usepackage{rotating}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\  \rule{0.5em}{0.5em}}
+
+
+
+\usepackage{hyperref}
+
+\definecolor{darkblue}{rgb}{0.00,0.15,0.7}
+\hypersetup{pdfpagemode=UseNone,colorlinks,breaklinks,
+            linkcolor=darkblue,urlcolor=darkblue,
+            anchorcolor=black,citecolor=black,
+            pdfstartview= XYZ null null 1.00,
+            %pdfstartview= fit
+            pdftoolbar= true,
+            pdfcenterwindow=false,
+           pdfpagemode=UseNone,colorlinks,breaklinks, 
+           }
+
+%%% set spaces between references (squeeze to save space!)
+%\setlength{\bibsep}{0.05cm}
+
+\makeatother
+
+\begin{document}
+
+\subsection*{Title}
+
+\texttt{ppml\_panel\_sg} - Fast Poisson Pseudo-Maximum Likelihood
+(PPML) regression for panel ``gravity'' models with time-varying
+origin and destination fixed effects and time-invariant pair fixed
+effects.
+
+
+\subsection*{Syntax}
+
+\texttt{ppml\_panel\_sg} \href{http://www.stata.com/help.cgi?depvar}{depvar}
+{[}\href{http://www.stata.com/help.cgi?indepvars}{indepvars}{]} {[}\href{http://www.stata.com/help.cgi?if}{if}{]}
+{[}\href{http://www.stata.com/help.cgi?in}{in}{]}, \uline{ex}porter(\emph{exp\_id})
+\uline{im}porter(\emph{imp\_id}) \uline{y}ear(\emph{time\_id})
+{[}\hyperref[sub:Main-Options]{options}{]}\vspace{0.375cm}
+
+
+\emph{exp\_id}, \emph{imp\_id}, and \emph{time\_id }are variables
+that respectively identify the origin, destination, and time period
+associated with each observation.
+
+
+\subsection*{Description}
+
+\texttt{ppml\_panel\_sg} enables faster computation of the many fixed
+effects required for panel PPML structural gravity estimation. In
+particular, it addresses the large number of ``pair-wise'' FEs needed
+to consistently identify the effects of time-varying trade policies
+such as regional trade agreements (see, e.g., \citealp{baier_free_2007,dai_trade-diversion_2014}).
+It also simultaneously absorbs the origin-by-time and destination-by-time
+FEs implied by theory. \vspace{0.375cm}
+
+
+Some options and features of interest:
+\begin{enumerate}
+\item Programmed to run in Mata, making it much faster than existing Stata
+Poisson commands for estimating the effects of trade policies.
+\item Can store the estimated fixed effects in Stata's memory (but as a
+single column each, rather than as a large matrix with many zeroes)
+\item In addition to the pair fixed effects, also readily allows for specifications
+with additional pair-specific linear time trends.
+\item All fixed effects are also allowed to vary by industry, in case you
+wish to examine industry-level variation in trade flows.
+\item Can be used with strictly cross-sectional regressions (i.e., without
+pair fixed effects).
+\item Performs \citet{santos_silva_existence_2010}'s recommended check
+for possible non-existence of estimates.
+\end{enumerate}
+
+\subsection*{Main Options\label{sub:Main-Options}}
+\begin{lyxlist}{00.00.0000000000}
+\item [{\textbf{\uline{nopair}}}] Use origin-time and destination-time
+fixed effects only (do not include pair fixed effects).
+\item [{\textbf{\uline{trend}}}] Add linear, pair-specific time trends.
+\item [{\textbf{\uline{sym}}\textbf{metric}}] Assume pair fixed effects
+apply symmetrically to flows in both directions, as in, e.g., \citet{anderson_terms_2016}.
+Time trends, if specified, will also be symmetric.
+\item [{\textbf{\uline{ind}}\textbf{ustry}(\emph{ind\_id})}] \noindent \emph{ind\_id}
+is a varname identifying the industry associated with each observation.
+When an \emph{ind\_id} is provided, the origin-time fixed effects
+become origin-industry-time effects, the destination-time fixed effects
+become destination-industry-time effects, and pair-specific terms
+become origin-destination-industry-specific.
+\item [{\textbf{\uline{off}}\textbf{set(}\emph{varname}\textbf{)}}] Include
+\emph{varname} as a regressor with coefficient constrained to be equal
+to 1.
+\item [{\textbf{\uline{tol}}\textbf{erance}(\href{http://www.stata.com/help.cgi?\#}{\#{}})}] The
+default tolerance is 1e-12.
+\item [{\textbf{\uline{max}}\textbf{iter}(\href{http://www.stata.com/help.cgi?\#}{\#{}})}] The
+default maximum number of iterations is 10,000.
+\item [{\textbf{\uline{clus}}\textbf{ter}(\emph{cluster\_id})}] Specifies
+clustered standard errors, clustered by \emph{cluster\_id. }The default
+is clustering by \emph{exp\_id-imp\_id}{[}-\emph{ind\_id}{]}, unless
+\textbf{nopair }is enabled.\emph{ }
+\item [{\textbf{\uline{ro}}\textbf{bust}}] Use robust standard errors.
+This is the default if \textbf{nopair} is enabled.
+\item [{\textbf{\uline{no}}\textbf{sterr}}] Do not compute standard
+errors (saves time if you only care about point estimates).
+\item [{\textbf{\uline{verb}}\textbf{ose}(\href{http://www.stata.com/help.cgi?\#}{\#{}})}] Show
+iterative output for every \href{http://www.stata.com/help.cgi?\#}{\#{}}th
+iteration. Default is 0 (no output).
+\end{lyxlist}
+
+\subsection*{Guessing and Storing Values}
+
+These options allow you to store results for fixed effects in memory
+as well as use information from memory to set up initial guesses.
+You may also utilize the ``multilateral resistances'' of \citet{anderson_gravity_2003}.\vspace{-0.0875cm}
+
+\begin{lyxlist}{000000000.00.0000}
+\item [{\textbf{\uline{ols}}\textbf{guess}}] Use \href{[https://ideas.repec.org/c/boc/bocode/s457874.html||reghdfe]}{reghdfe}
+to initialize guesses for coefficient values.
+\item [{\textbf{guessB}(\emph{str})}] Supply the name of a row vector with
+guesses for coefficient values.
+\item [{\textbf{guessD}(\emph{varname})}] \noindent Guess initial values
+for the (exponentiated) set of pair fixed effects. Default is all
+1s.
+\item [{\textbf{guessS}(\emph{varname})}] Guess initial values for the
+(exponentiated) set of origin-time fixed effects. Default is the share
+of \href{http://www.stata.com/help.cgi?depvar}{depvar}\emph{ }within
+each\emph{ }{[}\emph{ind\_id}-{]}\emph{time-id} associated with each
+\emph{exp-id.}
+\item [{\textbf{guessM}(\emph{varname})}] Guess initial values for the
+(exponentiated) set of destination-time fixed effects. Default is
+the share of \href{http://www.stata.com/help.cgi?depvar}{depvar}\emph{
+}within each\emph{ }{[}\emph{ind\_id}-{]}\emph{time-id} associated
+with each \emph{imp-id.}
+\item [{\textbf{guessO}(\emph{varname})}] Guess initial values for the
+set of ``outward'' multilateral resistances. Default is all 1s.
+Overrides \textbf{genS}.
+\item [{\textbf{guessI}(\emph{varname})}] Guess initial values for the
+set of ``inward'' multilateral resistances. Default is all 1s. Overrides
+\textbf{genM}.
+\item [{\textbf{guessTT}(\emph{varname})}] \noindent Guess initial values
+for pair time trends. These are not exponentiated. Default is all
+0s.
+\end{lyxlist}
+\textbf{genD}(\href{http://www.stata.com/help.cgi?newvar}{newvar}),
+\textbf{genS}(\href{http://www.stata.com/help.cgi?newvar}{newvar}),
+\textbf{genM}(\href{http://www.stata.com/help.cgi?newvar}{newvar}),
+\textbf{genO}(\href{http://www.stata.com/help.cgi?newvar}{newvar}),\textbf{
+genI}(\href{http://www.stata.com/help.cgi?newvar}{newvar}), and \textbf{genTT}(\href{http://www.stata.com/help.cgi?newvar}{newvar}):
+These options store fixed effects and/or time trend parameters in
+memory as new variables.
+
+
+\subsection*{Background}
+
+As a typical application, consider the following PPML regression:
+\begin{align}
+X_{ijt} & =\exp\left[\ln S_{it}+\ln M_{jt}+\ln D_{ij}+b\times RTA_{ijt}\right]+e_{ijt}.\label{eq:estimation}
+\end{align}
+
+
+$X_{ijt}$ are international trade flows. $i$, $j$, and $t$ are
+indices for origin, destination, and time. The goal is to consistently
+estimate the average effect of $RTA_{ijt}$, a dummy variable for
+the presence of a regional trade agreement on trade flows, using a
+``structural gravity'' specification. The origin-time and destination-time
+fixed effects---$S_{it}$ and $M_{jt}$---ensure the theoretical restrictions
+implied by structural gravity are satisfied. The pair fixed effect---$D_{ij}$---then
+absorbs all time-invariant pair characteristics that may be correlated
+with the likelihood of forming an RTA.\vspace{0.375cm}
+
+
+\noindent Computationally, the biggest obstacle to estimating \eqref{eq:estimation}
+is the pair fixed effect term $D_{ij}$. Because a unique $D_{ij}$
+must be computed for each pair, the number of $D_{ij}$'s increases
+rapidly with the number of locations. For a balanced international
+trade data set with 75 countries trading with each other over 10 years
+(not an especially large sample for trade data), there will be on
+the order of $75^{2}=5,625$ pair fixed effects that must be computed.
+In addition (ignoring collinearity), we will also require $75\times2\times10=1,500$
+origin-time and destination-time effects. The total number of parameters
+needed to estimate \eqref{eq:estimation} (around $7,000$) would
+normally require a long computing time in Stata, likely several hours
+at least. If we push the number of locations and/or years further,
+we will quickly approach Stata's matsize limits, beyond which estimation
+becomes infeasible.\vspace{0.375cm}
+
+
+To date, this is the only available Stata command that will perform
+``fast'' estimation of specifications such as \eqref{eq:estimation}
+using PPML. It works by manipulating the first order conditions of
+the Poisson to produce analytical expressions for each of the fixed
+effects that can be computed via simple iteration. In this way, it
+both adapts and extends existing procedures described in \citet{guimaraes_simple_2010}
+and \citet{figueiredo_industry_2015} for estimating Poisson models
+with high dimensional fixed effects. These works and others are recommended
+below for further reading.%
+\begin{comment}
+Make some sort of reference to Poisson PML following the ``workhorse''
+statement on JSS's website.
+\end{comment}
+
+
+
+\subsection*{Examples}
+
+To perform a basic panel estimation such as \eqref{eq:estimation}:\vspace{0.25cm}
+
+
+\texttt{ppml\_panel\_sg trade rta, ex(iso\_o) im(iso\_d) y(year)}\vspace{0.5cm}
+
+
+To add pair-specific time trends, i.e.,
+\begin{align}
+X_{ijt} & =\exp\left[\ln S_{it}+\ln M_{jt}+\ln D_{ij}+a_{ij}\times t+b\times RTA_{ijt}\right]+e_{ijt},\label{eq:2}
+\end{align}
+you would input:\vspace{0.25cm}
+
+
+\texttt{ppml\_panel\_sg trade rta, ex(iso\_o) im(iso\_d) y(year) trend}\vspace{0.5cm}
+
+
+If you want your pair fixed effects to be symmetric (i.e., $D_{ij}=D_{ji}$),
+the syntax is:\vspace{0.25cm}
+
+
+\texttt{ppml\_panel\_sg trade rta, ex(iso\_o) im(iso\_d) y(year) sym}\vspace{0.5cm}
+
+
+To estimate coefficients of more traditional, time-invariant gravity
+variables, such as bilateral distance, use the \textbf{nopair }option:\vspace{0.25cm}
+
+
+\texttt{ppml\_panel\_sg trade ln\_dist colony language contiguity
+rta, }
+
+\texttt{ex(iso\_o) im(iso\_d) y(year) nopair}\vspace{0.5cm}
+
+
+Unlike the regressions with pair fixed effects, however, obtaining
+estimates for time-invariant regressors may not be noticeably faster
+than existing methods (e.g., \href{http://www.stata.com/help.cgi?glm}{glm},
+\href{https://ideas.repec.org/c/boc/bocode/s458102.html}{ppml}) unless
+the number of origin-time and destination-time effects is sufficiently
+large. You may also exclude the year ID in this last specification
+if your data includes only 1 year. 
+
+
+\subsection*{Advisory}
+
+This estimation command is strictly intended for settings where the
+dependent variable is spatial flows from one set of locations to another
+(such as international trade or migration flows). It is not a generalized
+Poisson fixed effects command. For more general problems that require
+Poisson estimation, you may try: \href{http://www.stata.com/help.cgi?poisson}{poisson},
+\href{http://www.stata.com/help.cgi?glm}{glm}, \href{https://ideas.repec.org/c/boc/bocode/s458102.html}{ppml},
+\href{http://www.stata.com/help.cgi?xtpoisson}{xtpoisson}, \href{http://people.bu.edu/tsimcoe/data.html}{xtpqml},
+and/or \href{https://ideas.repec.org/c/boc/bocode/s457777.html}{poi2hdfe}.
+For an OLS command that can compute similar ``gravity'' specifications
+using OLS, I recommend \href{https://ideas.repec.org/c/boc/bocode/s457874.html}{reghdfe}.\vspace{0.375cm}
+
+
+As noted above, a useful feature of this command is that it will automatically
+drop any of your main covariates which do not satisfy the condition
+for guaranteeing the existence of estimates described in \citet{santos_silva_existence_2010}.
+This should ensure convergence in most cases. However, you may still
+encounter convergence issues in cases when linear time trends are
+specified and when the data contains many zeroes. Future versions
+of this command will seek to address this latter issue.
+
+\vspace{0.375cm}
+
+
+This is version 1.0 of this command. If you believe you have found
+an error that can be replicated, or have other suggestions for improvements,
+please feel free to \href{mailto:tomzylkin@gmail.com}{contact me}.%
+\begin{comment}
+Some other things to keep in mind:
+\end{comment}
+
+
+
+\subsection*{Acknowledgements}
+
+I have adapted parts of my code from several other related commands.
+These include: \href{https://ideas.repec.org/c/boc/bocode/s457777.html}{poi2hdfe},
+by Paulo Guimar\~aes, \href{https://sites.google.com/site/hiegravity/stata-programs}{SILS},
+by Keith Head and Thierry Mayer, and \href{https://ideas.repec.org/c/boc/bocode/s457874.html}{reghdfe}
+by Sergio Correia. I give the utmost credit to each of these authors
+for creating these programs and making their code available.\vspace{0.375cm}
+
+
+I also thank Yoto Yotov, Davin Chor, Sergio Correia, Paulo Guimar\~aes,
+and Jo\~ao Santos Silva for kindly taking the time to offer feedback
+and suggest improvements. 
+
+
+\subsection*{Further Reading}
+\begin{itemize}
+\item Structural gravity: \citet{anderson_gravity_2003,head_gravity_2014}
+\item On the use of PPML to estimate gravity equations: \citet{santos_silva_log_2006,santos_silva_further_2011,arvis_poisson_2013,egger_glm_2014,fally_structural_2015}
+\item Possible non-existence of Poisson MLE estimates: \citet{santos_silva_existence_2010}
+\item Consistently estimating the effects of trade policies: \citet{baier_free_2007,dai_trade-diversion_2014,anderson_terms_2016,piermartini_estimating_2016}
+\item Estimating models with high dimensional fixed effects: \citet{guimaraes_simple_2010,gaure_ols_2011,figueiredo_industry_2015,correia_reghdfe:_2016}
+\item Multi-variate Steffenson's acceleration (used to accelerate convergence):
+\citet{nievergelt_aitkens_1991}
+\end{itemize}
+\bibliographystyle{tomzcustom}
+\bibliography{references}
+\begin{comment}
+A note on multilateral resistances?
+\end{comment}
+
+\end{document}

@@ -1,0 +1,1506 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\usepackage{fancyhdr}
+
+\usepackage{setspace}
+\providecommand{\tabularnewline}{\\}
+\usepackage{pgf}\usepackage{pgfarrows}\usepackage{pgfnodes}\usepackage{pgfautomata}\usepackage{pgfheaps}\usepackage{abstract}\usepackage{longtable}\usepackage{rotating}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{case}[theorem]{Case}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conclusion}[theorem]{Conclusion}
+\newtheorem{condition}[theorem]{Condition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}{Corollary}
+\newtheorem{criterion}[theorem]{Criterion}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{lemma}{Lemma}
+\newtheorem{notation}[theorem]{Notation}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{solution}[theorem]{Solution}
+\newtheorem{summary}[theorem]{Summary}
+\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\  \rule{0.5em}{0.5em}}
+
+
+
+\usepackage{hyperref}
+
+\definecolor{darkblue}{rgb}{0.00,0.15,0.7}
+\hypersetup{pdfpagemode=UseNone,colorlinks,breaklinks,
+            linkcolor=darkblue,urlcolor=darkblue,
+            anchorcolor=black,citecolor=black,
+            pdfstartview= XYZ null null 1.00,
+            %pdfstartview= fit
+            pdftoolbar= true,
+            pdfcenterwindow=false,
+           pdfpagemode=UseNone,colorlinks,breaklinks, 
+           }
+
+%%% set spaces between references (squeeze to save space!)
+%\setlength{\bibsep}{0.05cm}
+\end_preamble
+\use_default_options false
+\begin_modules
+fix-cm
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding iso8859-15
+\fontencoding global
+\font_roman times
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 92
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing other 1.175
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 1
+\use_package mhchem 0
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.5cm
+\rightmargin 1.25cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip 0bp
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Subsection*
+Title
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg
+\family default
+ - Fast Poisson Pseudo-Maximum Likelihood (PPML) regression for panel 
+\begin_inset Quotes eld
+\end_inset
+
+gravity
+\begin_inset Quotes erd
+\end_inset
+
+ models with time-varying origin and destination fixed effects and time-invarian
+t pair fixed effects.
+\end_layout
+
+\begin_layout Subsection*
+Syntax
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg
+\family default
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "depvar"
+target "http://www.stata.com/help.cgi?depvar"
+
+\end_inset
+
+ [
+\begin_inset CommandInset href
+LatexCommand href
+name "indepvars"
+target "http://www.stata.com/help.cgi?indepvars"
+
+\end_inset
+
+] [
+\begin_inset CommandInset href
+LatexCommand href
+name "if"
+target "http://www.stata.com/help.cgi?if"
+
+\end_inset
+
+] [
+\begin_inset CommandInset href
+LatexCommand href
+name "in"
+target "http://www.stata.com/help.cgi?in"
+
+\end_inset
+
+], 
+\bar under
+ex
+\bar default
+porter(
+\emph on
+exp_id
+\emph default
+) 
+\bar under
+im
+\bar default
+porter(
+\emph on
+imp_id
+\emph default
+) 
+\bar under
+y
+\bar default
+ear(
+\emph on
+time_id
+\emph default
+) [
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+hyperref[sub:Main-Options]{options}
+\end_layout
+
+\end_inset
+
+]
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+exp_id
+\emph default
+, 
+\emph on
+imp_id
+\emph default
+, and 
+\emph on
+time_id 
+\emph default
+are variables that respectively identify the origin, destination, and time
+ period associated with each observation.
+\end_layout
+
+\begin_layout Subsection*
+Description
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg
+\family default
+ enables faster computation of the many fixed effects required for panel
+ PPML structural gravity estimation.
+ In particular, it addresses the large number of 
+\begin_inset Quotes eld
+\end_inset
+
+pair-wise
+\begin_inset Quotes erd
+\end_inset
+
+ FEs needed to consistently identify the effects of time-varying trade policies
+ such as regional trade agreements (see, e.g., 
+\begin_inset CommandInset citation
+LatexCommand citealp
+key "baier_free_2007,dai_trade-diversion_2014"
+
+\end_inset
+
+).
+ It also simultaneously absorbs the origin-by-time and destination-by-time
+ FEs implied by theory.
+ 
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Some options and features of interest:
+\end_layout
+
+\begin_layout Enumerate
+Programmed to run in Mata, making it much faster than existing Stata Poisson
+ commands for estimating the effects of trade policies.
+\end_layout
+
+\begin_layout Enumerate
+Can store the estimated fixed effects in Stata's memory (but as a single
+ column each, rather than as a large matrix with many zeroes)
+\end_layout
+
+\begin_layout Enumerate
+In addition to the pair fixed effects, also readily allows for specifications
+ with additional pair-specific linear time trends.
+\end_layout
+
+\begin_layout Enumerate
+All fixed effects are also allowed to vary by industry, in case you wish
+ to examine industry-level variation in trade flows.
+\end_layout
+
+\begin_layout Enumerate
+Can be used with strictly cross-sectional regressions (i.e., without pair
+ fixed effects).
+\end_layout
+
+\begin_layout Enumerate
+Performs 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "santos_silva_existence_2010"
+
+\end_inset
+
+'s recommended check for possible non-existence of estimates.
+\end_layout
+
+\begin_layout Subsection*
+Main Options
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:Main-Options"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+nopair
+\bar default
+ 
+\series default
+Use origin-time and destination-time fixed effects only (do not include
+ pair fixed effects).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+trend
+\series default
+\bar default
+ Add linear, pair-specific time trends.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+sym
+\bar default
+metric
+\series default
+ Assume pair fixed effects apply symmetrically to flows in both directions,
+ as in, e.g., 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "anderson_terms_2016"
+
+\end_inset
+
+.
+ Time trends, if specified, will also be symmetric.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+\noindent
+
+\series bold
+\bar under
+ind
+\bar default
+ustry
+\series default
+(
+\emph on
+ind_id
+\emph default
+) 
+\emph on
+ind_id
+\emph default
+ is a varname identifying the industry associated with each observation.
+ When an 
+\emph on
+ind_id
+\emph default
+ is provided, the origin-time fixed effects become origin-industry-time
+ effects, the destination-time fixed effects become destination-industry-time
+ effects, and pair-specific terms become origin-destination-industry-specific.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+off
+\bar default
+set(
+\series default
+\emph on
+varname
+\series bold
+\emph default
+) 
+\series default
+Include 
+\emph on
+varname
+\emph default
+ as a regressor with coefficient constrained to be equal to 1.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+tol
+\bar default
+erance
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "#"
+target "http://www.stata.com/help.cgi?#"
+
+\end_inset
+
+) The default tolerance is 1e-12.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+max
+\bar default
+iter
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "#"
+target "http://www.stata.com/help.cgi?#"
+
+\end_inset
+
+) The default maximum number of iterations is 10,000.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+clus
+\bar default
+ter
+\series default
+(
+\emph on
+cluster_id
+\emph default
+) Specifies clustered standard errors, clustered by 
+\emph on
+cluster_id.
+ 
+\emph default
+The default is clustering by 
+\emph on
+exp_id-imp_id
+\emph default
+[-
+\emph on
+ind_id
+\emph default
+], unless 
+\series bold
+nopair 
+\series default
+is enabled.
+
+\emph on
+ 
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+ro
+\bar default
+bust 
+\series default
+Use robust standard errors.
+ This is the default if 
+\series bold
+nopair
+\series default
+ is enabled.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+no
+\bar default
+sterr 
+\series default
+Do not compute standard errors (saves time if you only care about point
+ estimates).
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000000000
+
+\series bold
+\bar under
+verb
+\bar default
+ose
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "#"
+target "http://www.stata.com/help.cgi?#"
+
+\end_inset
+
+) Show iterative output for every 
+\begin_inset CommandInset href
+LatexCommand href
+name "#"
+target "http://www.stata.com/help.cgi?#"
+
+\end_inset
+
+th iteration.
+ Default is 0 (no output).
+\end_layout
+
+\begin_layout Subsection*
+Guessing and Storing Values
+\end_layout
+
+\begin_layout Standard
+These options allow you to store results for fixed effects in memory as
+ well as use information from memory to set up initial guesses.
+ You may also utilize the 
+\begin_inset Quotes eld
+\end_inset
+
+multilateral resistances
+\begin_inset Quotes erd
+\end_inset
+
+ of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "anderson_gravity_2003"
+
+\end_inset
+
+.
+\begin_inset VSpace -0.0875cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+
+\series bold
+\bar under
+ols
+\bar default
+guess
+\series default
+ Use 
+\begin_inset CommandInset href
+LatexCommand href
+name "reghdfe"
+target "[https://ideas.repec.org/c/boc/bocode/s457874.html||reghdfe]"
+
+\end_inset
+
+ to initialize guesses for coefficient values.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+
+\series bold
+guessB
+\series default
+(
+\emph on
+str
+\emph default
+) Supply the name of a row vector with guesses for coefficient values.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+\noindent
+
+\series bold
+guessD
+\series default
+(
+\emph on
+varname
+\emph default
+) Guess initial values for the (exponentiated) set of pair fixed effects.
+ Default is all 1s.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+
+\series bold
+guessS
+\series default
+(
+\emph on
+varname
+\emph default
+) Guess initial values for the (exponentiated) set of origin-time fixed
+ effects.
+ Default is the share of 
+\begin_inset CommandInset href
+LatexCommand href
+name "depvar"
+target "http://www.stata.com/help.cgi?depvar"
+
+\end_inset
+
+
+\emph on
+ 
+\emph default
+within each
+\emph on
+ 
+\emph default
+[
+\emph on
+ind_id
+\emph default
+-]
+\emph on
+time-id
+\emph default
+ associated with each 
+\emph on
+exp-id.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+
+\series bold
+guessM
+\series default
+(
+\emph on
+varname
+\emph default
+) Guess initial values for the (exponentiated) set of destination-time fixed
+ effects.
+ Default is the share of 
+\begin_inset CommandInset href
+LatexCommand href
+name "depvar"
+target "http://www.stata.com/help.cgi?depvar"
+
+\end_inset
+
+
+\emph on
+ 
+\emph default
+within each
+\emph on
+ 
+\emph default
+[
+\emph on
+ind_id
+\emph default
+-]
+\emph on
+time-id
+\emph default
+ associated with each 
+\emph on
+imp-id.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+
+\series bold
+guessO
+\series default
+(
+\emph on
+varname
+\emph default
+) Guess initial values for the set of 
+\begin_inset Quotes eld
+\end_inset
+
+outward
+\begin_inset Quotes erd
+\end_inset
+
+ multilateral resistances.
+ Default is all 1s.
+ Overrides 
+\series bold
+genS
+\series default
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+
+\series bold
+guessI
+\series default
+(
+\emph on
+varname
+\emph default
+) Guess initial values for the set of 
+\begin_inset Quotes eld
+\end_inset
+
+inward
+\begin_inset Quotes erd
+\end_inset
+
+ multilateral resistances.
+ Default is all 1s.
+ Overrides 
+\series bold
+genM
+\series default
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 000000000.00.0000
+\noindent
+
+\series bold
+guessTT
+\series default
+(
+\emph on
+varname
+\emph default
+) Guess initial values for pair time trends.
+ These are not exponentiated.
+ Default is all 0s.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+genD
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "newvar"
+target "http://www.stata.com/help.cgi?newvar"
+
+\end_inset
+
+), 
+\series bold
+genS
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "newvar"
+target "http://www.stata.com/help.cgi?newvar"
+
+\end_inset
+
+), 
+\series bold
+genM
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "newvar"
+target "http://www.stata.com/help.cgi?newvar"
+
+\end_inset
+
+), 
+\series bold
+genO
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "newvar"
+target "http://www.stata.com/help.cgi?newvar"
+
+\end_inset
+
+),
+\series bold
+ genI
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "newvar"
+target "http://www.stata.com/help.cgi?newvar"
+
+\end_inset
+
+), and 
+\series bold
+genTT
+\series default
+(
+\begin_inset CommandInset href
+LatexCommand href
+name "newvar"
+target "http://www.stata.com/help.cgi?newvar"
+
+\end_inset
+
+): These options store fixed effects and/or time trend parameters in memory
+ as new variables.
+\end_layout
+
+\begin_layout Subsection*
+Background
+\end_layout
+
+\begin_layout Standard
+As a typical application, consider the following PPML regression:
+\begin_inset Formula 
+\begin{align}
+X_{ijt} & =\exp\left[\ln S_{it}+\ln M_{jt}+\ln D_{ij}+b\times RTA_{ijt}\right]+e_{ijt}.\label{eq:estimation}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $X_{ijt}$
+\end_inset
+
+ are international trade flows.
+ 
+\begin_inset Formula $i$
+\end_inset
+
+, 
+\begin_inset Formula $j$
+\end_inset
+
+, and 
+\begin_inset Formula $t$
+\end_inset
+
+ are indices for origin, destination, and time.
+ The goal is to consistently estimate the average effect of 
+\begin_inset Formula $RTA_{ijt}$
+\end_inset
+
+, a dummy variable for the presence of a regional trade agreement on trade
+ flows, using a 
+\begin_inset Quotes eld
+\end_inset
+
+structural gravity
+\begin_inset Quotes erd
+\end_inset
+
+ specification.
+ The origin-time and destination-time fixed effects---
+\begin_inset Formula $S_{it}$
+\end_inset
+
+ and 
+\begin_inset Formula $M_{jt}$
+\end_inset
+
+---ensure the theoretical restrictions implied by structural gravity are
+ satisfied.
+ The pair fixed effect---
+\begin_inset Formula $D_{ij}$
+\end_inset
+
+---then absorbs all time-invariant pair characteristics that may be correlated
+ with the likelihood of forming an RTA.
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+Computationally, the biggest obstacle to estimating 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:estimation"
+
+\end_inset
+
+ is the pair fixed effect term 
+\begin_inset Formula $D_{ij}$
+\end_inset
+
+.
+ Because a unique 
+\begin_inset Formula $D_{ij}$
+\end_inset
+
+ must be computed for each pair, the number of 
+\begin_inset Formula $D_{ij}$
+\end_inset
+
+'s increases rapidly with the number of locations.
+ For a balanced international trade data set with 75 countries trading with
+ each other over 10 years (not an especially large sample for trade data),
+ there will be on the order of 
+\begin_inset Formula $75^{2}=5,625$
+\end_inset
+
+ pair fixed effects that must be computed.
+ In addition (ignoring collinearity), we will also require 
+\begin_inset Formula $75\times2\times10=1,500$
+\end_inset
+
+ origin-time and destination-time effects.
+ The total number of parameters needed to estimate 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:estimation"
+
+\end_inset
+
+ (around 
+\begin_inset Formula $7,000$
+\end_inset
+
+) would normally require a long computing time in Stata, likely several
+ hours at least.
+ If we push the number of locations and/or years further, we will quickly
+ approach Stata's matsize limits, beyond which estimation becomes infeasible.
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To date, this is the only available Stata command that will perform 
+\begin_inset Quotes eld
+\end_inset
+
+fast
+\begin_inset Quotes erd
+\end_inset
+
+ estimation of specifications such as 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:estimation"
+
+\end_inset
+
+ using PPML.
+ It works by manipulating the first order conditions of the Poisson to produce
+ analytical expressions for each of the fixed effects that can be computed
+ via simple iteration.
+ In this way, it both adapts and extends existing procedures described in
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "guimaraes_simple_2010"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "figueiredo_industry_2015"
+
+\end_inset
+
+ for estimating Poisson models with high dimensional fixed effects.
+ These works and others are recommended below for further reading.
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
+Make some sort of reference to Poisson PML following the 
+\begin_inset Quotes eld
+\end_inset
+
+workhorse
+\begin_inset Quotes erd
+\end_inset
+
+ statement on JSS's website.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Examples
+\end_layout
+
+\begin_layout Standard
+To perform a basic panel estimation such as 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:estimation"
+
+\end_inset
+
+:
+\begin_inset VSpace 0.25cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg trade rta, ex(iso_o) im(iso_d) y(year)
+\family default
+
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To add pair-specific time trends, i.e.,
+\begin_inset Formula 
+\begin{align}
+X_{ijt} & =\exp\left[\ln S_{it}+\ln M_{jt}+\ln D_{ij}+a_{ij}\times t+b\times RTA_{ijt}\right]+e_{ijt},\label{eq:2}
+\end{align}
+
+\end_inset
+
+you would input:
+\begin_inset VSpace 0.25cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg trade rta, ex(iso_o) im(iso_d) y(year) trend
+\family default
+
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you want your pair fixed effects to be symmetric (i.e., 
+\begin_inset Formula $D_{ij}=D_{ji}$
+\end_inset
+
+), the syntax is:
+\begin_inset VSpace 0.25cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg trade rta, ex(iso_o) im(iso_d) y(year) sym
+\family default
+
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To estimate coefficients of more traditional, time-invariant gravity variables,
+ such as bilateral distance, use the 
+\series bold
+nopair 
+\series default
+option:
+\begin_inset VSpace 0.25cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ppml_panel_sg trade ln_dist colony language contiguity rta, 
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+ex(iso_o) im(iso_d) y(year) nopair
+\family default
+
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unlike the regressions with pair fixed effects, however, obtaining estimates
+ for time-invariant regressors may not be noticeably faster than existing
+ methods (e.g., 
+\begin_inset CommandInset href
+LatexCommand href
+name "glm"
+target "http://www.stata.com/help.cgi?glm"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "ppml"
+target "https://ideas.repec.org/c/boc/bocode/s458102.html"
+
+\end_inset
+
+) unless the number of origin-time and destination-time effects is sufficiently
+ large.
+ You may also exclude the year ID in this last specification if your data
+ includes only 1 year.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Advisory
+\end_layout
+
+\begin_layout Standard
+This estimation command is strictly intended for settings where the dependent
+ variable is spatial flows from one set of locations to another (such as
+ international trade or migration flows).
+ It is not a generalized Poisson fixed effects command.
+ For more general problems that require Poisson estimation, you may try:
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "poisson"
+target "http://www.stata.com/help.cgi?poisson"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "glm"
+target "http://www.stata.com/help.cgi?glm"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "ppml"
+target "https://ideas.repec.org/c/boc/bocode/s458102.html"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "xtpoisson"
+target "http://www.stata.com/help.cgi?xtpoisson"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "xtpqml"
+target "http://people.bu.edu/tsimcoe/data.html"
+
+\end_inset
+
+, and/or 
+\begin_inset CommandInset href
+LatexCommand href
+name "poi2hdfe"
+target "https://ideas.repec.org/c/boc/bocode/s457777.html"
+
+\end_inset
+
+.
+ For an OLS command that can compute similar 
+\begin_inset Quotes eld
+\end_inset
+
+gravity
+\begin_inset Quotes erd
+\end_inset
+
+ specifications using OLS, I recommend 
+\begin_inset CommandInset href
+LatexCommand href
+name "reghdfe"
+target "https://ideas.repec.org/c/boc/bocode/s457874.html"
+
+\end_inset
+
+.
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As noted above, a useful feature of this command is that it will automatically
+ drop any of your main covariates which do not satisfy the condition for
+ guaranteeing the existence of estimates described in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "santos_silva_existence_2010"
+
+\end_inset
+
+.
+ This should ensure convergence in most cases.
+ However, you may still encounter convergence issues in cases when linear
+ time trends are specified and when the data contains many zeroes.
+ Future versions of this command will seek to address this latter issue.
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is version 1.0 of this command.
+ If you believe you have found an error that can be replicated, or have
+ other suggestions for improvements, please feel free to 
+\begin_inset CommandInset href
+LatexCommand href
+name "contact me"
+target "tomzylkin@gmail.com"
+type "mailto:"
+
+\end_inset
+
+.
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+Some other things to keep in mind:
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Acknowledgements
+\end_layout
+
+\begin_layout Standard
+I have adapted parts of my code from several other related commands.
+ These include: 
+\begin_inset CommandInset href
+LatexCommand href
+name "poi2hdfe"
+target "https://ideas.repec.org/c/boc/bocode/s457777.html"
+
+\end_inset
+
+, by Paulo Guimar
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+~
+\end_layout
+
+\end_inset
+
+aes, 
+\begin_inset CommandInset href
+LatexCommand href
+name "SILS"
+target "https://sites.google.com/site/hiegravity/stata-programs"
+
+\end_inset
+
+, by Keith Head and Thierry Mayer, and 
+\begin_inset CommandInset href
+LatexCommand href
+name "reghdfe"
+target "https://ideas.repec.org/c/boc/bocode/s457874.html"
+
+\end_inset
+
+ by Sergio Correia.
+ I give the utmost credit to each of these authors for creating these programs
+ and making their code available.
+\begin_inset VSpace 0.375cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I also thank Yoto Yotov, Davin Chor, Sergio Correia, Paulo Guimar
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+~
+\end_layout
+
+\end_inset
+
+aes, and Jo
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+~
+\end_layout
+
+\end_inset
+
+ao Santos Silva for kindly taking the time to offer feedback and suggest
+ improvements.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Further Reading
+\end_layout
+
+\begin_layout Itemize
+Structural gravity: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "anderson_gravity_2003,head_gravity_2014"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+On the use of PPML to estimate gravity equations: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "santos_silva_log_2006,santos_silva_further_2011,arvis_poisson_2013,egger_glm_2014,fally_structural_2015"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Possible non-existence of Poisson MLE estimates: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "santos_silva_existence_2010"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Consistently estimating the effects of trade policies: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "baier_free_2007,dai_trade-diversion_2014,anderson_terms_2016,piermartini_estimating_2016"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Estimating models with high dimensional fixed effects: 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "guimaraes_simple_2010,gaure_ols_2011,figueiredo_industry_2015,correia_reghdfe:_2016"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Multi-variate Steffenson's acceleration (used to accelerate convergence):
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "nievergelt_aitkens_1991"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "references"
+options "tomzcustom"
+
+\end_inset
+
+
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+A note on multilateral resistances?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
