@@ -2,11 +2,13 @@ program define ppml_panel_sg, eclass
 
 *! PPML (Panel) Structural Gravity Estimation, by Tom Zylkin
 *! Department of Economics, National University of Singapore
-*! Version 1.06, October, 2016
+*! Version 1.07, November, 2016
 
-// requires: reghdfe (if "ols" option used), hdfe
+// requires: reghdfe (if "olsguess" option used), hdfe
 
-// future:  faster setup of country and year ids, use hdfe to speed up s.e.s
+// v1.07  - fixed selectidx13() bug; fixed year bug
+//        - added checks for if hdfe, reghdfe are installed
+//		  - added support for e(sample), e(r2)
 
 // v1.06  - fixed selectindex() backwards compatibility
 
@@ -24,8 +26,8 @@ program define ppml_panel_sg, eclass
 
 tempvar exclude X_ij Y_w y_i e_j D tt phi fta_effect OMR IMR ///
 				ind_id yr_id exp_id imp_id S M panel_id ///
-				X_ij_hat temp time lhs exp_time imp_time
-tempname beta v1 n_iter N_obs N_dropped center which id_flag resid_ vers
+				X_ij_hat temp time lhs exp_time imp_time esample
+tempname beta v1 n_iter N_obs N_dropped center which id_flag vers
 
 scalar `vers' = c(version)
 
@@ -68,6 +70,14 @@ syntax varlist [if] [in],      ///
 
 	
 /** 0.  parse syntax, create temp vars  **/
+cap which hdfe
+if _rc == 111 {
+	di in red "You will need to install -hdfe- in order to use this command."
+	di
+	di in red "To install, type -ssc install hdfe-".
+	exit 111
+}
+
 tokenize `varlist'
 local trade `1'
 macro shift
@@ -142,7 +152,7 @@ qui egen `yr_id'  = group(`year')     if `touse'
 qui egen `exp_id' = group(`exporter') if `touse'
 qui egen `imp_id' = group(`importer') if `touse'
 
-qui sum year if `touse'
+qui sum `year' if `touse'
 qui gen     `time' = `year' - `r(min)' if `touse'
 qui replace `time' = 0 if "`trend'" == ""
 
@@ -156,11 +166,11 @@ if `id_flag' != 0 {
 }
 
 mata: country_ids("`exporter'", "`importer'", "`exp_id'", "`imp_id'", "`vers'","`touse'")  //creates unique country IDs, for cases where the set of exporters is not the 
-																				           //same as the set of importers
-																			  
+																				           //same as the set of importers																			  
 																				  
 // II. Set up fixed effects structure and check for collinearity and possible non-existence of estimates
-di "Checking for possible non-existence issues..."
+di "Checking for possible non-existence issues..."	
+
 qui egen `exp_time' = group(`yr_id' `ind_id' `exp_id') if `touse'
 qui egen `imp_time' = group(`yr_id' `ind_id' `exp_id') if `touse' 
 if "`nopair'" != "" {
@@ -172,7 +182,7 @@ if "`nopair'" != "" {
 		di in red "Option -trend' ignored, since -nopair- enabled"
 	}
 	qui gen `panel_id' = 1 if `touse'
-	qui hdfe `policyvars' if `X_ij'>0, absorb(`exp_time' `imp_time') gen(`resid_')
+	local _fes = "`exp_time' `imp_time'"
 }
 else if "`symmetric'" != "" {
 	tempvar pair_id asym_id
@@ -180,29 +190,30 @@ else if "`symmetric'" != "" {
 	qui replace `pair_id' = `importer' + `exporter' if (`importer' < `exporter')
 	qui egen `asym_id' = group(`industry' `exporter' `importer') if `touse'
 	qui egen `panel_id' = group(`industry' `pair_id') if `touse'
+	
 	if "`trend'" != "" {
 		scalar `which' = 4
-		qui hdfe `policyvars' if `X_ij'>0, absorb(`exp_time' `imp_time' `panel_id'##c.`time') gen(`resid_')
+		local _fes = "`exp_time' `imp_time' `panel_id'##c.`time'"
 	}
 	else {
 		scalar `which' = 1
-		qui hdfe `policyvars' if `X_ij'>0, absorb(`exp_time' `imp_time' `panel_id') gen(`resid_')
+		local _fes = "`exp_time' `imp_time' `panel_id'"
 	}
 }
 else {
 	qui egen `panel_id' = group(`industry' `exporter' `importer') if `touse'
 	if "`trend'" != "" {
 		scalar `which' = 3
-		qui hdfe `policyvars' if `X_ij'>0, absorb(`exp_time' `imp_time' `panel_id'##c.`time') gen(`resid_')
+		local _fes = "`exp_time' `imp_time' `panel_id'##c.`time'"
 	}
 	else {
 		scalar `which' = 0
-		qui hdfe `policyvars' if `X_ij'>0, absorb(`exp_time' `imp_time' `panel_id') gen(`resid_')
+		local _fes = "`exp_time' `imp_time' `panel_id'"
 	}
 }
 
 //EnsureExist borrows concepts from "RemoveCollinear" by Sergio Correia, originally from -reghdfe-
-EnsureExist if `touse', dep(`X_ij') indep(`policyvars') off(`offset') resid(`resid_')
+EnsureExist if `touse', dep(`X_ij') indep(`policyvars') off(`offset') fes(`_fes')
 local policyvars `r(okvars)'
 local nvars :  word count `policyvars'
 local rest = "`policyvars'"
@@ -227,9 +238,16 @@ cap gen `e_j' = .
 // The default is that initial `trade' is "frictionless": D=1, ln_phi = 0 ==> IMR = OMR = 1
 // The option "olsguess" uses -reghdfe- to initialize betas based on OLS.
 if "`olsguess'"!="" {
+	cap which reghdfe
+	if _rc == 111 {
+		di in red "You will need to install -reghdfe- in order to use the -olsguess- option."
+		di
+		di in red "To install, type -ssc install reghdfe-".
+		exit 111
+	}
 	tempvar ln_LHS
 	qui gen `ln_LHS' = ln(`X_ij') - `offset'
-	qui reghdfe `ln_LHS' `policyvars' if `touse', absorb(`exp_time' `imp_time' `panel_id' )
+	qui reghdfe `ln_LHS' `policyvars' if `touse', absorb(`_fes')
 	qui gen `OMR' = 1 if `touse'
 	qui gen `IMR' = 1 if `touse'
 	qui gen `D'   = 1 if `touse'
@@ -304,7 +322,10 @@ if `n_iter' == `maxiter' {
 	di in red "Max number of iterations reached before estimates converged. Consider adjusting the maxiter() option"
 	di
 }
-		
+
+qui gen `esample'  = e(sample)
+local ll =e(ll)	
+
 		
 /** IV. Compute standard errors (if option enabled) and set up for posting. **/
 if "`nosterr'"=="" {
@@ -330,10 +351,6 @@ if "`nosterr'"=="" {
 	}
 	qui gen `phi' = `D' * exp(`tt'*`time') * exp(`fta_effect') * exp(`offset')
 	qui replace `phi' = 0 if missing(`phi') | `exclude' | !`touse'
-	
-	local ll=e(ll)
-	local ll0=e(ll_0)
-	
 	
 	*** 1. fit X_ij directly using structural gravity
 	qui gen `X_ij_hat' = (`y_i' * `e_j' * `Y_w') * (`phi' / (`OMR' * `IMR'))
@@ -402,13 +419,9 @@ if "`nosterr'"=="" {
 	
 	//qui sum(`X_ij')
 	//local N = r(N)
-	ereturn post `beta' `v1', depname(`trade') obs(`N') 
-
-	ereturn scalar ll=`ll'
-	ereturn scalar ll_0=`ll0'
-	ereturn local cmdline "ppml_panel_sg `0'"
-	ereturn local cmd "ppml_panel_sg"
-	ereturn local crittype "log likelihood"
+	ereturn post `beta' `v1', depname(`trade') obs(`N') esample(`esample')
+	qui corr `X_ij_hat' `X_ij' if `touse'
+	ereturn scalar r2 = r(rho)^2 
 	
 	cap drop _s_*
 	cap drop _r_*  //make these temp vars
@@ -419,9 +432,9 @@ else {
 	local N=`N_obs'	
 	
 	//qui sum(`X_ij')
-	//local N = r(N)
-	eret post `beta', depname(`trade') obs(`N') 
-}
+	//local N = r(N)	
+	eret post `beta', depname(`trade') obs(`N') esample(`esample')
+} 
 
 // store fixed effects in memory if requested by user
 cap drop `genO'
@@ -430,15 +443,17 @@ cap drop `genD'
 cap drop `genTT'
 cap drop `genS'
 cap drop `genM'
-cap gen `genS' = `y_i' / `OMR'
-cap gen `genM' = `e_j' / `IMR'
+cap gen  `genS' = `y_i' / `OMR'
+cap gen  `genM' = `e_j' / `IMR'
 cap rename `OMR' `genO'
 cap rename `IMR' `genI'
 cap rename `D'   `genD'
 cap rename `tt'  `genTT'
 
+ereturn scalar ll=`ll'
 ereturn local cmdline "ppml_panel_sg `0'"
 ereturn local cmd "ppml_panel_sg"
+ereturn local crittype "log likelihood"
 
 
 // V. Display final regression table and notes
@@ -502,27 +517,51 @@ program define EnsureExist, rclass
 	DEPvar(varname numeric) 	///
 	INDEPvars(varlist numeric)	///
 	OFFset_weight(string)		///
-	RESIDuals(string)					
-		
+	FEs(string)
+	
 	qui marksample touse
-	qui _rmcoll `offset_weight' `residuals'* if `touse' & `depvar'>0, forcedrop   // check simple collinearity across `policyvars'
+	tempname resid1
+	tempvar  zeros
+	qui hdfe `indepvars' if `touse'&`depvar'>0, absorb(`fes') gen(`resid1')
+		
+	qui _rmcoll `offset_weight' `resid1'* if `touse' & `depvar'>0, forcedrop     // check simple collinearity across `policyvars'
 	local okvars = r(varlist)
 	if ("`okvars'"==".") local okvars
 	local df_m : list sizeof okvars
 	
 	foreach var of local indepvars {
-		local resid_var = "`residuals'`var'"
+		local resid_var = "`resid1'`var'"
 		local ok1 : list resid_var in okvars
-		qui sum `residuals'`var'
-		local ok2 = (`r(sd)'>1e-9)												  // residuals are net of FEs; ~0 residual variation implies
-		local ok  = (`ok1'&`ok2')												  // collinearity with one or more of the FEs.
+		qui sum `resid1'`var' if `touse' & `depvar'>0
+		local ok2 = (`r(sd)'>1e-9)												 // residuals are net of FEs; ~0 residual variation implies
+																				 // collinearity with one or more of the FEs.
+		local ok  = (`ok1'&`ok2')
+		if (`ok' == 0) {
+			//cap gen `zeros'=1
+			local _mean = r(mean)
+			qui sum `var' if `touse'&`depvar'==0	 
+			if (r(min)<`_mean')&(r(max)>`_mean') {
+				local ok = 1													 // this is a condition used in -ppml- which determines whether	
+			}																	 // it is still possible to include x
+			else{
+				qui sum `var' if `touse', d
+				local _mad=r(p50)
+				qui inspect `var'     if `touse'
+				//qui replace `zeros'=0 if (`var'!=`_mad')&(r(N_unique)==2)&(`touse') // Mark observations to drop (to be consistent with ppml)
+			}
+		}
 		local prefix = cond(`ok', "", "o.")
 		local label : char `var'[name]
 		if (!`ok') di in red "note: `var' omitted because of collinearity over lhs>0 (creates possible existence issue)"
 		local varlist `varlist' `prefix'`var'
 		if (`ok') local okvarlist `okvarlist' `var'
 	}
-
+	/*
+	qui su `touse' if `touse', mean
+	local _enne=r(sum)
+	qui replace `touse'=0 if (`zeros'==0)&("`keep'"=="")&(`y'==0)&(`touse') 
+	*/
+	
 	mata: st_local("vars", strtrim(stritrim( "`varlist'" )) )
 	mata: st_local("okvars", strtrim(stritrim( "`okvarlist'" )) )
 	return local vars "`vars'"
@@ -570,7 +609,7 @@ void id_check(string scalar idvars,| string scalar touse)
 
 mata:
 void country_ids(string scalar exp_name, string scalar imp_name, string scalar exp_id_var, 
-                string scalar imp_id_var, string scalar vers,| string scalar touse)
+                 string scalar imp_id_var, string scalar vers,| string scalar touse)
 {
 	EXP_NAMES = st_sdata(.,tokens(exp_name), touse)
 	IMP_NAMES = st_sdata(.,tokens(imp_name), touse)
@@ -595,7 +634,7 @@ void country_ids(string scalar exp_name, string scalar imp_name, string scalar e
 	for (c=1; c<=NN_c-1; c++) {
 		if (select(exp_uniq,exp_id_uniq:==c) != select(imp_uniq,imp_id_uniq:==c)) {  
 			if (select(exp_uniq,exp_id_uniq:==c) < select(imp_uniq,imp_id_uniq:==c)) {
-				imp_id_uniq[selectidx(imp_id_uniq:>=c,vers), 1]=imp_id_uniq[selectidx13(imp_id_uniq:>=c,vers), 1] :+1
+				imp_id_uniq[selectidx(imp_id_uniq:>=c,vers), 1]=imp_id_uniq[selectidx(imp_id_uniq:>=c,vers), 1] :+1
 				imp_id[selectidx(imp_id :>= c,vers),.] = imp_id[selectidx(imp_id :>= c,vers),.] :+ 1
 				NN_im = NN_im + 1
 			} 
@@ -1280,3 +1319,4 @@ real vector selectidx11(real vector x)
 }
 
 end
+
