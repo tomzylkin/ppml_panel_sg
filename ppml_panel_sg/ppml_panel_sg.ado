@@ -172,7 +172,7 @@ mata: country_ids("`exporter'", "`importer'", "`exp_id'", "`imp_id'", "`vers'","
 di "Checking for possible non-existence issues..."	
 
 qui egen `exp_time' = group(`yr_id' `ind_id' `exp_id') if `touse'
-qui egen `imp_time' = group(`yr_id' `ind_id' `exp_id') if `touse' 
+qui egen `imp_time' = group(`yr_id' `ind_id' `imp_id') if `touse' 
 if "`nopair'" != "" {
 	scalar `which' = 2
 	if "`symmetric'" != "" {
